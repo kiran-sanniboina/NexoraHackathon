@@ -69,12 +69,35 @@ export function Navbar({ theme = "dark", onToggleTheme }: NavbarProps) {
 
         {/* Inner Content Bar */}
         <div className="flex items-center justify-between px-3 sm:px-6 h-11 sm:h-16">
-          {/* Logo with Architectural Prism Monogram */}
+          {/* Logo with Architectural Prism Monogram & Circle Partner Logos */}
           <Link
             href="/"
-            className="group flex items-center gap-1.5 sm:gap-2 transition-transform hover:scale-[1.02] duration-200"
+            className="group flex items-center gap-2 sm:gap-2.5 transition-transform hover:scale-[1.02] duration-200"
           >
             <NexoraLogo size={22} variant="prism" showWordmark />
+
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 pl-1 sm:pl-1.5 border-l border-white/10 dark:border-white/10">
+              <div 
+                className="w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden border border-white/25 dark:border-white/20 bg-white shadow-sm shrink-0 flex items-center justify-center p-0.5 transition-transform hover:scale-110" 
+                title="RGUKT Srikakulam"
+              >
+                <img
+                  src="/logo1.jpg"
+                  alt="RGUKT Srikakulam"
+                  className="w-full h-full object-contain rounded-full"
+                />
+              </div>
+              <div 
+                className="w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden border border-white/25 dark:border-white/20 bg-white shadow-sm shrink-0 flex items-center justify-center p-0.5 transition-transform hover:scale-110" 
+                title="Coding Club"
+              >
+                <img
+                  src="/logo2.jpeg"
+                  alt="Coding Club"
+                  className="w-full h-full object-contain rounded-full scale-110"
+                />
+              </div>
+            </div>
           </Link>
 
           {/* Desktop Navigation Links */}
