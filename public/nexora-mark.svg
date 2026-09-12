@@ -1,0 +1,9 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Architectural 3-Facet Isometric N Monogram -->
+  <!-- Left Facet -->
+  <path d="M 10 14 L 19 8 L 19 34 L 10 40 Z" fill="currentColor"/>
+  <!-- Diagonal Bridge Facet -->
+  <path d="M 19 8 L 29 22 L 29 40 L 19 26 Z" fill="currentColor" fill-opacity="0.7"/>
+  <!-- Right Facet -->
+  <path d="M 29 22 L 38 16 L 38 42 L 29 48 Z" fill="currentColor" fill-opacity="0.4"/>
+</svg>
