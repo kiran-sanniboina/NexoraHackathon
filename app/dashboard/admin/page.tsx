@@ -69,7 +69,7 @@ const SAMPLE_TEAMS: TeamItem[] = [
   {
     code: "NX-2026-4821",
     name: "Apex Cybernetica",
-    track: "AI & Intelligent Systems",
+    track: "AI & Machine Learning",
     leader_name: "Kiran S.",
     leader_email: "builder@rguktsklm.ac.in",
     leader_phone: "+91 93925 67773",
@@ -98,7 +98,7 @@ const SAMPLE_TEAMS: TeamItem[] = [
   {
     code: "NX-2026-1092",
     name: "QuantumLedger",
-    track: "Web3, FinTech & Cryptographic Trust",
+    track: "Product Based",
     leader_name: "Anand Verma",
     leader_email: "anand.v@rguktsklm.ac.in",
     leader_phone: "+91 98480 22334",
@@ -134,7 +134,7 @@ const SAMPLE_TEAMS: TeamItem[] = [
   {
     code: "NX-2026-8834",
     name: "HyperGrid IoT",
-    track: "IoT, Robotics & Smart Embedded Systems",
+    track: "Disaster Management",
     leader_name: "Sneha Reddy",
     leader_email: "sneha.r@rguktsklm.ac.in",
     leader_phone: "+91 91234 56789",
@@ -156,7 +156,7 @@ const SAMPLE_TEAMS: TeamItem[] = [
   {
     code: "NX-2026-5519",
     name: "SentinelGuard",
-    track: "Cloud Infrastructure, DevOps & Cyber Defense",
+    track: "Cyber Security",
     leader_name: "Farhan Ali",
     leader_email: "farhan.ali@rguktsklm.ac.in",
     leader_phone: "+91 94400 11223",
@@ -526,11 +526,13 @@ export default function AdminDashboardPage() {
                   onChange={(e) => setSelectedTrack(e.target.value)}
                   className="w-full sm:w-auto px-3 py-2 rounded-lg bg-surface border border-border-subtle text-xs font-caps text-foreground focus:outline-none focus:border-primary cursor-pointer truncate"
                 >
-                  <option value="ALL">All Tracks</option>
-                  <option value="AI & Intelligent Systems">AI & Intelligent Systems</option>
-                  <option value="Web3, FinTech & Cryptographic Trust">Web3 & FinTech</option>
-                  <option value="IoT, Robotics & Smart Embedded Systems">IoT & Robotics</option>
-                  <option value="Cloud Infrastructure, DevOps & Cyber Defense">Cloud & Cyber</option>
+                  <option value="ALL">All Domains</option>
+                  <option value="AI & Machine Learning">AI & Machine Learning</option>
+                  <option value="Health & BioTech">Health & BioTech</option>
+                  <option value="Disaster Management">Disaster Management</option>
+                  <option value="Quantum Computing">Quantum Computing</option>
+                  <option value="Product Based">Product Based</option>
+                  <option value="Cyber Security">Cyber Security</option>
                 </select>
 
                 <select
@@ -618,7 +620,7 @@ export default function AdminDashboardPage() {
                     <tr className="border-b border-border-subtle bg-surface/60 text-muted-foreground">
                       <th className="py-3 px-4 font-semibold uppercase tracking-wider">Team ID</th>
                       <th className="py-3 px-4 font-semibold uppercase tracking-wider">Team Name</th>
-                      <th className="py-3 px-4 font-semibold uppercase tracking-wider">Assigned Track</th>
+                      <th className="py-3 px-4 font-semibold uppercase tracking-wider">Domain</th>
                       <th className="py-3 px-4 font-semibold uppercase tracking-wider">Team Leader & Contact</th>
                       <th className="py-3 px-4 font-semibold uppercase tracking-wider text-center">Roster Size</th>
                       <th className="py-3 px-4 font-semibold uppercase tracking-wider">Status</th>

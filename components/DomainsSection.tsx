@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import Link from "next/link";
 import {
   motion,
   useScroll,
@@ -443,9 +444,12 @@ export function DomainsSection() {
                         </div>
 
                         {/* Card Action Footer */}
-                        <div className="flex items-center justify-between pt-2.5 border-t border-border-subtle/80">
+                        <Link
+                          href={`/register?domain=${encodeURIComponent(domain.id)}`}
+                          className="flex items-center justify-between pt-2.5 border-t border-border-subtle/80 group-hover:text-primary transition-colors duration-200"
+                        >
                           <span className="text-[10px] sm:text-[11px] font-caps tracking-[0.07em] text-muted-foreground group-hover:text-foreground transition-colors duration-200">
-                            Select Domain Track
+                            Select This Domain
                           </span>
                           <div
                             className="flex items-center justify-center w-6 h-6 rounded-full border border-border-subtle transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -453,7 +457,7 @@ export function DomainsSection() {
                           >
                             <ArrowUpRight className="w-3.5 h-3.5" />
                           </div>
-                        </div>
+                        </Link>
                       </div>
                     </div>
                   );

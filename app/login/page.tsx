@@ -102,7 +102,7 @@ export default function LoginPage() {
           setTeamData({
             code: "NX-2026-4821",
             name: "Apex Cybernetica",
-            track: "AI & Intelligent Systems",
+            track: "AI & Machine Learning",
             leader_name: "Kiran S.",
             leader_email: "builder@rguktsklm.ac.in",
             members: [
@@ -201,7 +201,7 @@ export default function LoginPage() {
                   ID: {teamData?.code || teamId.toUpperCase()}
                 </div>
                 <p className="text-xs font-caps text-zinc-400 mt-1">
-                  Track: <span className="text-white font-medium">{teamData?.track || "AI & Intelligent Systems"}</span>
+                  Domain: <span className="text-white font-medium">{teamData?.track || "AI & Machine Learning"}</span>
                 </p>
                 {teamData?.leader_name && (
                   <p className="text-[11px] font-caps text-zinc-400">

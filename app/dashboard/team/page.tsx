@@ -55,7 +55,7 @@ interface TeamRecord {
 const DEFAULT_TEAM: TeamRecord = {
   code: "NX-2026-4821",
   name: "Apex Cybernetica",
-  track: "AI & Intelligent Systems",
+  track: "AI & Machine Learning",
   leader_name: "Kiran S.",
   leader_email: "builder@rguktsklm.ac.in",
   leader_phone: "+91 93925 67773",
@@ -287,7 +287,7 @@ function TeamDashboardContent() {
                   {team.name}
                 </h3>
                 <p className="text-xs font-caps text-zinc-300">
-                  Track: <span className="text-white font-medium">{team.track}</span>
+                  Domain: <span className="text-white font-medium">{team.track}</span>
                 </p>
               </div>
 

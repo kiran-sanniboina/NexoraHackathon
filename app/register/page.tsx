@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { NexoraLogo } from "@/components/NexoraLogo";
 import {
@@ -22,8 +22,58 @@ import {
   LogIn,
   Loader2,
   Database,
+  Brain,
+  Activity,
+  ShieldAlert,
+  Atom,
+  Layers,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+
+const DOMAINS = [
+  {
+    id: "ai-ml",
+    name: "AI & Machine Learning",
+    subtitle: "Autonomous Agents & Deep Learning",
+    color: "#00BAF2",
+    icon: Brain,
+  },
+  {
+    id: "health",
+    name: "Health & BioTech",
+    subtitle: "Precision Diagnostics & Telehealth",
+    color: "#10B981",
+    icon: Activity,
+  },
+  {
+    id: "disaster-management",
+    name: "Disaster Management",
+    subtitle: "Crisis Mitigation & Emergency Dispatch",
+    color: "#F59E0B",
+    icon: ShieldAlert,
+  },
+  {
+    id: "quantum",
+    name: "Quantum Computing",
+    subtitle: "Next-Gen Quantum Algorithms",
+    color: "#8B5CF6",
+    icon: Atom,
+  },
+  {
+    id: "product-based",
+    name: "Product Based",
+    subtitle: "Scalable Digital Ecosystems",
+    color: "#EC4899",
+    icon: Layers,
+  },
+  {
+    id: "cyber-security",
+    name: "Cyber Security",
+    subtitle: "Zero-Trust & Digital Defense",
+    color: "#06B6D4",
+    icon: ShieldCheck,
+  },
+];
 
 interface TeamMember {
   name: string;
@@ -55,7 +105,26 @@ export default function RegisterPage() {
 
   // Form State
   const [teamName, setTeamName] = useState("");
-  const [track, setTrack] = useState("AI & Intelligent Systems");
+  const [domain, setDomain] = useState("AI & Machine Learning");
+
+  // Sync domain from URL query parameters (e.g. ?domain=quantum or ?domain=ai-ml)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const queryDomain = params.get("domain") || params.get("track");
+      if (queryDomain) {
+        const found = DOMAINS.find(
+          (d) =>
+            d.id.toLowerCase() === queryDomain.toLowerCase() ||
+            d.name.toLowerCase() === queryDomain.toLowerCase() ||
+            d.name.toLowerCase().includes(queryDomain.toLowerCase())
+        );
+        if (found) {
+          setDomain(found.name);
+        }
+      }
+    }
+  }, []);
   
   // Lead State
   const [leadName, setLeadName] = useState("");
@@ -109,7 +178,8 @@ export default function RegisterPage() {
           {
             code: newId,
             name: teamName.trim(),
-            track: track,
+            track: domain,
+            domain: domain,
             leader_name: leadName.trim(),
             leader_email: leadEmail.trim().toLowerCase(),
             leader_phone: leadPhone.trim(),
@@ -295,8 +365,8 @@ export default function RegisterPage() {
                   <span className="font-bold text-white text-sm">{teamName}</span>
                 </div>
                 <div>
-                  <span className="text-[9px] text-zinc-400 uppercase tracking-wider block">Challenge Domain</span>
-                  <span className="font-semibold text-primary">{track}</span>
+                  <span className="text-[9px] text-zinc-400 uppercase tracking-wider block">Selected Domain</span>
+                  <span className="font-semibold text-primary">{domain}</span>
                 </div>
                 <div>
                   <span className="text-[9px] text-zinc-400 uppercase tracking-wider block">Team Lead</span>
@@ -389,45 +459,110 @@ export default function RegisterPage() {
             {/* Registration Form */}
             <form onSubmit={handleSubmit} className="space-y-8">
               
-              {/* SECTION 1: Team & Track Information */}
-              <div className="space-y-4 p-5 sm:p-6 rounded-xl border border-white/15 bg-[#0e0e10]">
+              {/* SECTION 1: Team & Domain Selection */}
+              <div className="space-y-5 p-5 sm:p-6 rounded-xl border border-white/15 bg-[#0e0e10]">
                 <div className="flex items-center gap-2 pb-2 border-b border-white/10">
                   <Ticket className="w-4 h-4 text-primary" />
                   <h2 className="text-sm sm:text-base font-bold font-caps text-white">
-                    1. Team Identity & Challenge Domain
+                    1. Team Identity & Domain Selection
                   </h2>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-[11px] font-caps tracking-wider text-zinc-300 uppercase font-semibold block">
-                      Team Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={teamName}
-                      onChange={(e) => setTeamName(e.target.value)}
-                      placeholder="e.g. CyberKnights"
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#141417] border border-white/20 text-xs sm:text-sm text-white font-medium placeholder:text-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/40 font-caps transition-all"
-                    />
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-caps tracking-wider text-zinc-300 uppercase font-semibold block">
+                    Team Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={teamName}
+                    onChange={(e) => setTeamName(e.target.value)}
+                    placeholder="e.g. CyberKnights"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-[#141417] border border-white/20 text-xs sm:text-sm text-white font-medium placeholder:text-zinc-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/40 font-caps transition-all"
+                  />
+                </div>
+
+                {/* Domain Selection Component */}
+                <div className="space-y-2.5 pt-1">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                    <div>
+                      <label className="text-[11px] font-caps tracking-wider text-zinc-300 uppercase font-semibold block">
+                        Select Your Domain *
+                      </label>
+                      <p className="text-[11px] text-zinc-400">
+                        Choose the official challenge domain your team will build under for NEXORA '26
+                      </p>
+                    </div>
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-primary/40 bg-primary/10 text-primary text-[10px] font-caps font-semibold self-start sm:self-auto">
+                      <span className="text-zinc-400">Chosen:</span>
+                      <span className="text-white font-bold">{domain}</span>
+                    </div>
                   </div>
 
-                  <div className="space-y-1.5">
-                    <label className="text-[11px] font-caps tracking-wider text-zinc-300 uppercase font-semibold block">
-                      Challenge Domain Track *
-                    </label>
+                  {/* Interactive Domain Selection Cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                    {DOMAINS.map((d) => {
+                      const Icon = d.icon;
+                      const isSelected = domain === d.name;
+                      return (
+                        <button
+                          key={d.id}
+                          type="button"
+                          onClick={() => setDomain(d.name)}
+                          className={`p-3.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between gap-3 group cursor-pointer ${
+                            isSelected
+                              ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(0,186,242,0.18)] ring-1 ring-primary/40 text-white"
+                              : "border-white/10 bg-[#141417] hover:border-white/25 hover:bg-[#18181c] text-zinc-300"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <div
+                              className="w-7 h-7 rounded-lg flex items-center justify-center border"
+                              style={{
+                                backgroundColor: `${d.color}15`,
+                                borderColor: `${d.color}40`,
+                                color: d.color,
+                              }}
+                            >
+                              <Icon className="w-3.5 h-3.5" />
+                            </div>
+                            <div
+                              className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
+                                isSelected
+                                  ? "border-primary bg-primary text-black"
+                                  : "border-white/20 bg-transparent group-hover:border-white/40"
+                              }`}
+                            >
+                              {isSelected && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                            </div>
+                          </div>
+
+                          <div>
+                            <div className="text-xs sm:text-sm font-bold font-caps text-white group-hover:text-primary transition-colors">
+                              {d.name}
+                            </div>
+                            <div className="text-[10px] text-zinc-400 line-clamp-1 mt-0.5">
+                              {d.subtitle}
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Accessible Synced Dropdown for Mobile / Keyboard */}
+                  <div className="pt-1">
                     <select
-                      value={track}
-                      onChange={(e) => setTrack(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#141417] border border-white/20 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/40 font-caps transition-all"
+                      value={domain}
+                      onChange={(e) => setDomain(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#141417] border border-white/20 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/40 font-caps transition-all cursor-pointer"
+                      aria-label="Select Challenge Domain"
                     >
-                      <option value="AI & Intelligent Systems" className="bg-[#141417] text-white">AI & Intelligent Systems</option>
-                      <option value="Cyber Security & Threat Defense" className="bg-[#141417] text-white">Cyber Security & Threat Defense</option>
-                      <option value="Next-Gen FinTech & Web3" className="bg-[#141417] text-white">Next-Gen FinTech & Web3</option>
-                      <option value="Cloud Architecture & DevOps" className="bg-[#141417] text-white">Cloud Architecture & DevOps</option>
-                      <option value="Smart Systems & IoT Hardware" className="bg-[#141417] text-white">Smart Systems & IoT Hardware</option>
-                      <option value="Open Horizon Innovation" className="bg-[#141417] text-white">Open Horizon Innovation</option>
+                      {DOMAINS.map((d) => (
+                        <option key={d.id} value={d.name} className="bg-[#141417] text-white">
+                          {d.name} — {d.subtitle}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
