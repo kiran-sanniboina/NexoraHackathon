@@ -1,0 +1,15 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="120" rx="24" fill="#0A0A0A"/>
+  <rect x="0.5" y="0.5" width="119" height="119" rx="23.5" stroke="white" stroke-opacity="0.1" stroke-width="1"/>
+  
+  <!-- Architectural 3-Facet Isometric N Monogram -->
+  <g transform="translate(12, 12)">
+    <!-- Left Facet -->
+    <path d="M 20 28 L 38 16 L 38 68 L 20 80 Z" fill="#FFFFFF"/>
+    <!-- Diagonal Bridge Facet -->
+    <path d="M 38 16 L 58 44 L 58 80 L 38 52 Z" fill="#00BAF2"/>
+    <!-- Right Facet -->
+    <path d="M 58 44 L 76 32 L 76 84 L 58 96 Z" fill="#FFFFFF" fill-opacity="0.5"/>
+  </g>
+</svg>
+

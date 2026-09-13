@@ -133,7 +133,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-x-clip bg-background text-foreground selection:bg-primary selection:text-black">
+    <div className="min-h-screen relative overflow-x-clip bg-transparent text-foreground selection:bg-primary selection:text-black">
       
       {/* Top Fixed Header with Back Link & Functional Theme Toggle */}
       <header className="sticky top-0 z-50 w-full border-b border-border-subtle/80 bg-background/80 backdrop-blur-xl">

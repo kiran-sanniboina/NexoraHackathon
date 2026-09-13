@@ -22,7 +22,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-x-clip bg-background text-foreground selection:bg-primary selection:text-black">
+    <div className="min-h-screen relative overflow-x-clip bg-transparent text-foreground selection:bg-primary selection:text-black">
       <Navbar theme={theme} onToggleTheme={toggleTheme} />
       
       <div className="pt-24 sm:pt-28 px-4 sm:px-6 max-w-7xl mx-auto">

@@ -1,9 +1,18 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { FlowGradientBackground } from "@/components/FlowGradientBackground";
 
 export const metadata: Metadata = {
   title: "NEXORA 2026 — Coding Club Hackathon",
   description: "A premier national technology hackathon organized by Coding Club in partnership with Paytm.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/nexora-logo.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/nexora-logo.svg",
+  },
 };
 
 export default function RootLayout({
@@ -13,8 +22,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body className="antialiased min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background">
-        {children}
+      <body className="antialiased min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background relative">
+        <FlowGradientBackground />
+        <div className="relative z-10">
+          {children}
+        </div>
       </body>
     </html>
   );

@@ -140,7 +140,7 @@ function TeamDashboardContent() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-black">
+    <div className="min-h-screen bg-transparent text-foreground selection:bg-primary selection:text-black">
       
       {/* Top Header */}
       <header className="sticky top-0 z-40 w-full border-b border-border-subtle bg-background/80 backdrop-blur-xl print:hidden">

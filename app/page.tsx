@@ -24,7 +24,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-x-clip bg-background text-foreground selection:bg-primary selection:text-black">
+    <div className="min-h-screen relative overflow-x-clip bg-transparent text-foreground selection:bg-primary selection:text-black">
       {/* 1. Centered Glassmorphed Navbar with Corner Accents & Kinetic Rolling Hover */}
       <Navbar theme={theme} onToggleTheme={toggleTheme} />
 
