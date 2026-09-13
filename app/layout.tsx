@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { FlowGradientBackground } from "@/components/FlowGradientBackground";
+import { BackgroundAnimation } from "@/components/BackgroundAnimation";
 
 export const metadata: Metadata = {
   title: "NEXORA 2026 — Coding Club Hackathon",
@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body className="antialiased min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background relative">
-        <FlowGradientBackground />
+        <BackgroundAnimation />
         <div className="relative z-10">
           {children}
         </div>
