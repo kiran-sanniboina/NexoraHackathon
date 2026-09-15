@@ -27,6 +27,7 @@ import {
   ShieldAlert,
   Atom,
   Layers,
+  AlertCircle,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -89,6 +90,7 @@ export default function RegisterPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dbStatus, setDbStatus] = useState<"synced" | "needs_migration" | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [generatedTeamId, setGeneratedTeamId] = useState("");
 
   const toggleTheme = () => {
@@ -116,7 +118,6 @@ export default function RegisterPage() {
         const found = DOMAINS.find(
           (d) =>
             d.id.toLowerCase() === queryDomain.toLowerCase() ||
-            d.name.toLowerCase() === queryDomain.toLowerCase() ||
             d.name.toLowerCase().includes(queryDomain.toLowerCase())
         );
         if (found) {
@@ -167,46 +168,125 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError(null);
     const randomNum = Math.floor(1000 + Math.random() * 9000);
-    const newId = "NX-2026-" + randomNum;
+    const fallbackId = "NX-2026-" + randomNum;
 
+    const cleanedMembers = members.filter((m) => m.name.trim().length > 0);
+    const payload = {
+      teamName: teamName.trim(),
+      domain,
+      leadName: leadName.trim(),
+      leadEmail: leadEmail.trim().toLowerCase(),
+      leadPhone: leadPhone.trim(),
+      leadRoll: leadRoll.trim(),
+      leadBranch,
+      leadYear,
+      members: cleanedMembers,
+    };
+
+    let assignedId = fallbackId;
+    let syncSuccess = false;
+    let errorMessage = "";
+
+    // 1. Primary Route: Server-side /api/register
     try {
-      const supabase = createClient();
-      if (supabase) {
-        const cleanedMembers = members.filter((m) => m.name.trim().length > 0);
-        const { error } = await supabase.from("teams").insert([
-          {
-            code: newId,
-            name: teamName.trim(),
-            track: domain,
-            domain: domain,
-            leader_name: leadName.trim(),
-            leader_email: leadEmail.trim().toLowerCase(),
-            leader_phone: leadPhone.trim(),
-            leader_roll: leadRoll.trim(),
-            leader_branch: leadBranch,
-            leader_year: leadYear,
-            members: cleanedMembers,
-            status: "CONFIRMED",
-          },
-        ]);
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-        if (error) {
-          console.warn("Supabase insert notice:", error);
-          setDbStatus("needs_migration");
-        } else {
-          setDbStatus("synced");
-        }
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        assignedId = result.code || fallbackId;
+        syncSuccess = true;
+        setDbStatus("synced");
+      } else {
+        console.warn("Backend API route warning:", result);
+        errorMessage = result.error || "Failed to persist registration to database.";
       }
-    } catch (err) {
-      console.error("Supabase insert exception:", err);
-      setDbStatus("needs_migration");
-    } finally {
-      setIsSubmitting(false);
-      setGeneratedTeamId(newId);
+    } catch (apiErr: any) {
+      console.warn("Primary API route error, attempting direct database fallback:", apiErr);
+      errorMessage = apiErr?.message || "Network error contacting registration endpoint.";
+    }
+
+    // 2. Fallback Route: Direct Supabase client insert (using track column matching public.teams schema)
+    if (!syncSuccess) {
+      try {
+        const supabase = createClient();
+        if (supabase) {
+          const { error } = await supabase.from("teams").insert([
+            {
+              code: fallbackId,
+              name: teamName.trim(),
+              track: domain, // Strictly track column, matching public.teams schema
+              leader_name: leadName.trim(),
+              leader_email: leadEmail.trim().toLowerCase(),
+              leader_phone: leadPhone.trim() || null,
+              leader_roll: leadRoll.trim(),
+              leader_branch: leadBranch,
+              leader_year: leadYear,
+              members: cleanedMembers,
+              status: "CONFIRMED",
+            },
+          ]);
+
+          if (error) {
+            console.error("Direct Supabase fallback notice:", error);
+            errorMessage = error.message || "Failed to save to database.";
+            setDbStatus("needs_migration");
+          } else {
+            assignedId = fallbackId;
+            syncSuccess = true;
+            setDbStatus("synced");
+          }
+        }
+      } catch (dbErr: any) {
+        console.error("Supabase insert exception:", dbErr);
+        errorMessage = dbErr?.message || "Failed to connect to database.";
+        setDbStatus("needs_migration");
+      }
+    }
+
+    // 3. LocalStorage persistence for instant offline & dashboard view consistency
+    if (syncSuccess) {
+      try {
+        const existingLocal = localStorage.getItem("nexora_registrations");
+        const existingList = existingLocal ? JSON.parse(existingLocal) : [];
+        const newLocalRecord = {
+          id: `reg-${Date.now()}`,
+          teamId: assignedId,
+          teamName: teamName.trim(),
+          leaderName: leadName.trim(),
+          leaderEmail: leadEmail.trim().toLowerCase(),
+          college: "RGUKT Srikakulam",
+          track: domain,
+          memberCount: cleanedMembers.length + 1,
+          status: "CONFIRMED",
+          submittedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        localStorage.setItem(
+          "nexora_registrations",
+          JSON.stringify([newLocalRecord, ...existingList])
+        );
+      } catch {
+        // Safe to ignore localStorage issues
+      }
+
+      setGeneratedTeamId(assignedId);
       setIsSubmitted(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      setSubmitError(
+        errorMessage ||
+          "Unable to save your registration to the database. Please verify your details and try again."
+      );
     }
+
+    setIsSubmitting(false);
   };
 
   const copyTeamId = () => {
@@ -459,6 +539,20 @@ export default function RegisterPage() {
             {/* Registration Form */}
             <form onSubmit={handleSubmit} className="space-y-8">
               
+              {/* Submission Error Banner */}
+              {submitError && (
+                <div className="p-4 rounded-xl border border-red-500/40 bg-red-500/10 text-red-400 text-xs font-caps flex items-start gap-3 animate-fade-in-1">
+                  <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-red-400" />
+                  <div className="space-y-1">
+                    <span className="font-bold text-sm block text-red-300">Registration Failed to Persist</span>
+                    <p className="text-zinc-300 normal-case">{submitError}</p>
+                    <p className="text-[11px] text-zinc-400">
+                      Your registration was not saved to the database. Please verify your details and network, then try submitting again.
+                    </p>
+                  </div>
+                </div>
+              )}
+
               {/* SECTION 1: Team & Domain Selection */}
               <div className="space-y-5 p-5 sm:p-6 rounded-xl border border-white/15 bg-[#0e0e10]">
                 <div className="flex items-center gap-2 pb-2 border-b border-white/10">
